@@ -13,7 +13,7 @@
     onComplete: () => {
       gsap.set([
         '.hero-eyebrow', '.hero-title > span', '.hero-sub',
-        '.hero-actions > *', '.hero-aside-tag',
+        '.hero-aside-tag',
         '.hero-stats', '.hero-stats > .stat-item', '.hero-aside-meta',
       ], { clearProps: 'all' });
     },
@@ -25,10 +25,7 @@
       duration: 1.0, stagger: 0.08,
     }, '-=0.35')
     .from('.hero-sub', { y: 30, autoAlpha: 0, duration: 0.7 }, '-=0.55')
-    .from('.hero-actions > *', {
-      y: 30, autoAlpha: 0, duration: 0.55, stagger: 0.08,
-    }, '-=0.4')
-    .from('.hero-aside-tag', { y: 20, autoAlpha: 0, duration: 0.5 }, '-=0.85')
+    .from('.hero-aside-tag', { y: 20, autoAlpha: 0, duration: 0.5 }, '-=0.6')
     .from('.hero-stats', { x: 60, autoAlpha: 0, duration: 0.8 }, '-=0.7')
     .from('.hero-stats > .stat-item', {
       y: 24, autoAlpha: 0, duration: 0.5, stagger: 0.07,
