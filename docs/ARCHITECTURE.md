@@ -3,24 +3,26 @@
 ## Простая и достаточная
 
 ```
-Browser ──HTTPS──► Caddy/Nginx (TLS) ──► Node.js (Fastify :3000)
+Browser ──HTTPS──► nginx/Caddy (TLS) ──► Node.js (Fastify :3000)
                                               │
-                              ┌───────────────┼───────────────┐
-                              │ статика site/ │ POST /api/lead │
-                              │ index.html    │   ↓            │
-                              │ app.js        │ Telegram Bot   │
-                              └───────────────┴────────────────┘
+                              ┌───────────────┼─────────────────┐
+                              │ статика site/ │ POST /api/lead  │
+                              │ index.html    │   ↓             │
+                              │ app.js        │ SMTP smtp.beget.com
+                              └───────────────┴─────────────────┘
                                                        │
                                                        ▼
-                                                 личный чат / группа
+                                              MAIL_TO (kisuke43@gmail.com)
 ```
+
+Для Beget (shared) альтернативный путь: `POST /mail.php` → `mail()` или SMTP — без Node.
 
 ## Стек
 - **Node.js 20** + **Fastify** — статика + 1 endpoint.
 - **`@fastify/static`** отдаёт `site/index.html` и `site/app.js`.
 - **`@fastify/rate-limit`** — 5 запросов/мин на IP.
-- **Telegram Bot API** (`sendMessage`, parse_mode: HTML).
-- **Caddy** перед Node — авто-TLS Let's Encrypt (или Nginx — на выбор).
+- **SMTP-клиент** на встроенных `net`/`tls` (без зависимостей), цель — `smtp.beget.com:465 SSL`.
+- **nginx или Caddy** перед Node — авто-TLS Let's Encrypt.
 - **systemd** держит процесс.
 
 ## Файлы
@@ -30,7 +32,7 @@ kino/
 │  ├─ index.html          # ТОЧНАЯ копия твоего макета (+ модалка в конце <body>)
 │  └─ app.js              # модалка + fetch /api/lead
 ├─ server/
-│  └─ index.mjs           # Fastify: статика + /api/lead → Telegram
+│  └─ index.mjs           # Fastify: статика + /api/lead → SMTP
 ├─ docs/
 │  ├─ TZ.md
 │  ├─ ARCHITECTURE.md
@@ -59,9 +61,9 @@ kino/
 - Если ожидается поток >100k посетителей в сутки → CDN (Cloudflare бесплатный достаточен).
 
 ## Безопасность
-- Токен бота **только** в `.env` на сервере, в репо не коммитится (`.gitignore`).
-- `trustProxy: true` для корректного IP за Caddy/Nginx.
+- SMTP-пароль **только** в `.env` на сервере, в репо не коммитится (`.gitignore`).
+- `trustProxy: true` для корректного IP за nginx/Caddy.
 - Rate-limit 5/min/IP + honeypot.
-- Экранирование HTML в Telegram-сообщении.
-- HTTPS-only, HSTS через Caddy.
+- Экранирование HTML в письме.
+- HTTPS-only, HSTS через nginx/Caddy.
 - Согласие 152-ФЗ обязательное чекбокс-полем.

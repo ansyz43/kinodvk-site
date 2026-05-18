@@ -11,7 +11,6 @@
 - Купленная VPS Timeweb (минимум 1 vCPU / 1 GB RAM, Ubuntu 22.04 LTS).
 - IP-адрес сервера и root-пароль из письма Timeweb.
 - Домен, привязанный A-записью к IP сервера (Timeweb DNS → A-запись `kinodvk.ru` → IP).
-- (опционально) Telegram-бот, если хотите дублировать заявки в чат: токен от `@BotFather` и `chat_id`.
 
 ---
 
@@ -90,16 +89,12 @@ SMTP_USER=noreply@kinodvk.ru
 SMTP_PASS=ПАРОЛЬ_ОТ_ЯЩИКА
 MAIL_FROM=noreply@kinodvk.ru
 MAIL_TO=kisuke43@gmail.com
-
-# (опционально) дубликат заявок в Telegram
-TELEGRAM_BOT_TOKEN=
-TELEGRAM_CHAT_ID=
 EOF
 sudo chmod 640 /etc/kino/env
 ```
 
 Сначала создайте на Beget ящик `noreply@<домен>` и впишите его пароль в `SMTP_PASS`.
-Если SMTP не задан и Telegram тоже — сервер примет заявку и запишет её в логи, но никуда не отправит.
+Если SMTP не настроен — сервер примет заявку и запишет её в логи, но никуда не отправит.
 
 ---
 
@@ -175,7 +170,7 @@ sudo systemctl enable --now certbot.timer
 
 ## 7. (опционально) Включить `mail.php` на VPS
 
-Если хотите чтобы форма слала письма прямо с VPS (а не только в Telegram):
+Node-бэкенд и так шлёт письма через `smtp.beget.com` напрямую. PHP-обработчик нужен только если вы захотите вместо Node поднять Beget-подобный shared-режим. Тогда:
 
 ```bash
 sudo apt -y install php8.3-fpm php8.3-cli

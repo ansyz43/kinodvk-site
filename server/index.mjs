@@ -1,4 +1,4 @@
-// Минимальный сервер: статика site/ + POST /api/lead -> SMTP-почта и/или Telegram
+// Минимальный сервер: статика site/ + POST /api/lead -> SMTP-почта
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import rateLimit from '@fastify/rate-limit';
@@ -34,10 +34,6 @@ if (existsSync(envPath)) {
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || '0.0.0.0';
 
-// --- Telegram (опционально) ---
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const CHAT_ID   = process.env.TELEGRAM_CHAT_ID;
-
 // --- SMTP (для отправки писем) ---
 const SMTP_HOST   = process.env.SMTP_HOST   || '';                // напр. smtp.beget.com
 const SMTP_PORT   = Number(process.env.SMTP_PORT || 465);          // 465=SSL, 587=STARTTLS
@@ -48,13 +44,11 @@ const MAIL_FROM   = process.env.MAIL_FROM   || SMTP_USER;
 const MAIL_TO     = process.env.MAIL_TO     || 'kisuke43@gmail.com';
 
 const HAS_MAIL = !!(SMTP_HOST && SMTP_USER && SMTP_PASS && MAIL_FROM);
-const HAS_TG   = !!(BOT_TOKEN && CHAT_ID);
 
-if (!HAS_MAIL && !HAS_TG) {
-  console.warn('[WARN] Не задан ни SMTP, ни Telegram — заявки не будут отправляться.');
+if (!HAS_MAIL) {
+  console.warn('[WARN] SMTP не настроен — заявки будут только записываться в лог.');
 } else {
-  if (HAS_MAIL) console.log(`[OK] SMTP настроен: ${SMTP_HOST}:${SMTP_PORT} (${SMTP_SECURE}) → ${MAIL_TO}`);
-  if (HAS_TG)   console.log('[OK] Telegram настроен');
+  console.log(`[OK] SMTP настроен: ${SMTP_HOST}:${SMTP_PORT} (${SMTP_SECURE}) → ${MAIL_TO}`);
 }
 
 const app = Fastify({ logger: true, trustProxy: true, bodyLimit: 16 * 1024 });
@@ -229,24 +223,6 @@ async function doAuthAndSend(dlg, resolve, onError, timer, subject, text, html) 
   } catch (err) { onError(err); }
 }
 
-async function sendTelegram(text) {
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text,
-      parse_mode: 'HTML',
-      disable_web_page_preview: true
-    })
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`Telegram ${res.status}: ${body.slice(0, 200)}`);
-  }
-}
-
 app.post('/api/lead', {
   config: { rateLimit: { max: 5, timeWindow: '1 minute' } }
 }, async (req, reply) => {
@@ -265,13 +241,6 @@ app.post('/api/lead', {
     return reply.code(400).send({ ok: false, error: 'Некорректный телефон' });
   }
 
-  if (!HAS_MAIL && !HAS_TG) {
-    // Заявка валидна, но никакой канал не настроен — пишем в логи, отвечаем 200,
-    // чтобы пользователь не видел "сервер недоступен" из-за серверной конфигурации.
-    req.log.warn({ name: cleanName, phone: cleanPhone, page }, 'LEAD (no transport configured)');
-    return { ok: true, warn: 'no-transport' };
-  }
-
   const ip = req.ip;
   const ua = req.headers['user-agent'] || '';
   const ts = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Vladivostok' });
@@ -287,6 +256,13 @@ app.post('/api/lead', {
     `IP:        ${ip}\n` +
     `UA:        ${String(ua).slice(0, 200)}\n`;
 
+  if (!HAS_MAIL) {
+    // SMTP не настроен — пишем заявку в лог, клиенту отвечаем OK,
+    // чтобы пользователя не пугать "сервер недоступен" из-за серверной конфигурации.
+    req.log.warn({ lead: { name: cleanName, phone: cleanPhone, page, ts, ip } }, 'LEAD (SMTP not configured)');
+    return { ok: true, warn: 'no-transport' };
+  }
+
   const html =
     `<h2 style="font-family:Arial,sans-serif">🎬 ${escapeHtml(subj)}</h2>` +
     `<table cellpadding="6" style="font-family:Arial,sans-serif;font-size:14px;border-collapse:collapse">` +
@@ -298,32 +274,13 @@ app.post('/api/lead', {
     `<tr><td><b>UA</b></td><td>${escapeHtml(String(ua).slice(0, 200))}</td></tr>` +
     `</table>`;
 
-  const tgMsg =
-    `<b>🎬 Новая заявка — Кинопремия</b>\n` +
-    `<b>Имя:</b> ${escapeHtml(cleanName)}\n` +
-    `<b>Телефон:</b> <code>${escapeHtml(cleanPhone)}</code>\n` +
-    `<b>Страница:</b> ${escapeHtml(page || '/')}\n` +
-    `<b>Время (Влд):</b> ${escapeHtml(ts)}\n` +
-    `<b>IP:</b> <code>${escapeHtml(ip)}</code>\n` +
-    `<b>UA:</b> ${escapeHtml(String(ua).slice(0, 200))}`;
-
-  const results = await Promise.allSettled([
-    HAS_MAIL ? sendSmtpMail({ subject: subj, text: plain, html }) : null,
-    HAS_TG   ? sendTelegram(tgMsg) : null
-  ].filter(Boolean));
-
-  const anyOk = results.some(r => r.status === 'fulfilled');
-  if (!anyOk) {
-    const errs = results.map(r => r.reason?.message || String(r.reason)).join(' | ');
-    req.log.error({ errs }, 'Все каналы доставки заявки упали');
+  try {
+    await sendSmtpMail({ subject: subj, text: plain, html });
+    return { ok: true };
+  } catch (err) {
+    req.log.error({ err: err.message }, 'SMTP отправка упала');
     return reply.code(502).send({ ok: false, error: 'Не удалось отправить заявку' });
   }
-
-  // если хоть один канал отвалился — лог, но клиенту OK
-  for (const r of results) {
-    if (r.status === 'rejected') req.log.warn({ err: r.reason?.message }, 'Один из каналов упал');
-  }
-  return { ok: true };
 });
 
 app.get('/api/health', async () => ({ ok: true }));

@@ -11,30 +11,17 @@ node -v   # >= 20
 # 2. Зависимости
 npm install
 
-# 3. .env с токенами
+# 3. .env c настройками SMTP
 Copy-Item .env.example .env
 notepad .env
-# вписать TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID
+# вписать SMTP_USER, SMTP_PASS (ящик noreply@<домен> на Beget) и MAIL_TO
 
 # 4. Старт
 npm run dev
 # → http://localhost:3000
 ```
 
-Открыть [http://localhost:3000](http://localhost:3000), нажать «Подать заявку», заполнить — должно прилететь в Telegram.
-
----
-
-## Получить TELEGRAM_BOT_TOKEN и CHAT_ID
-
-1. В Telegram: пишем [@BotFather](https://t.me/BotFather) → `/newbot` → имя → username (заканчивается на `bot`) → копируем `BOT_TOKEN`.
-2. Своему боту пишем любое сообщение (например, `/start`).
-3. Открываем в браузере (вместо `<TOKEN>` свой токен):
-   ```
-   https://api.telegram.org/bot<TOKEN>/getUpdates
-   ```
-   В ответе ищем `"chat":{"id": 123456789, ...}` → это `CHAT_ID`.
-4. Если хочешь в группу — добавь бота в группу, отправь сообщение в группу, тот же `getUpdates` покажет `id` группы (отрицательное число).
+Открыть [http://localhost:3000](http://localhost:3000), нажать «Подать заявку», заполнить — письмо должно прилететь на `MAIL_TO` (по умолчанию `kisuke43@gmail.com`).
 
 ---
 
@@ -63,10 +50,10 @@ node -v
 cd /srv
 sudo mkdir kino && sudo chown deploy:deploy kino
 cd kino
-git clone <твой-git-url> .   # или scp с локальной машины
+git clone https://github.com/ansyz43/Kinodvk.git .   # или scp с локальной машины
 npm ci --omit=dev
 cp .env.example .env
-nano .env                     # вставить TELEGRAM_BOT_TOKEN и CHAT_ID
+nano .env                     # вставить SMTP_USER/SMTP_PASS/MAIL_TO
 ```
 
 ### 5. systemd сервис
@@ -125,7 +112,7 @@ curl http://localhost:3000/api/health
 curl -X POST http://localhost:3000/api/lead \
   -H "Content-Type: application/json" \
   -d '{"name":"Тест","phone":"+79991234567","company":""}'
-# {"ok":true}  и сообщение прилетает в TG
+# {"ok":true}  и письмо прилетает на MAIL_TO
 ```
 
 ## Логи
