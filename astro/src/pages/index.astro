@@ -18,6 +18,11 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
         <a href="/submit" class="btn-primary">Подать заявку →</a>
         <a href="/archive" class="btn-ghost">Архив победителей</a>
       </div>
+      <dl class="hero-meta-row">
+        <div><dt>Сезон</dt><dd>III — 2026</dd></div>
+        <div><dt>Площадка</dt><dd>ГДК · Хабаровск</dd></div>
+        <div><dt>Дедлайн</dt><dd>Подача — апрель</dd></div>
+      </dl>
     </div>
     <div class="hero-collage" aria-hidden="true">
       <div class="ph" style="background-image:url('/assets/gallery/2025/LX3A5728_resized.jpg')"><div class="ph-cap">II сезон · Улан-Удэ · 2025</div></div>
@@ -44,7 +49,7 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
   </div>
 </section>
 
-<section class="feat-news has-discover" aria-label="Главная новость">
+<section class="feat-news" aria-label="Главная новость">
   <div class="feat-news-inner">
     <div class="feat-news-body">
       <div class="feat-news-tag">News · 18 мая 2026</div>
@@ -64,16 +69,6 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
     </dl>
   </div>
 </section>
-
-<aside class="discover">
-  <h3>Узнать<br />больше</h3>
-  <ul>
-    <li><a href="/nominations">Номинации 2026</a></li>
-    <li><a href="/regulation">Регламент и&nbsp;подача</a></li>
-    <li><a href="/program">Деловая программа</a></li>
-    <li><a href="/archive">Архив победителей</a></li>
-  </ul>
-</aside>
 
 <section class="edition-section gold">
   <div class="edition-line">
@@ -108,6 +103,16 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
     </div>
   </div>
 </section>
+
+<aside class="discover discover-after-about">
+  <h3>Узнать<br />больше</h3>
+  <ul>
+    <li><a href="/nominations">Номинации 2026</a></li>
+    <li><a href="/regulation">Регламент и&nbsp;подача</a></li>
+    <li><a href="/program">Деловая программа</a></li>
+    <li><a href="/archive">Архив победителей</a></li>
+  </ul>
+</aside>
 
 <PhotoMarquee client:visible />
 

@@ -6,9 +6,10 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://kinodvk.ru',
   vite: {
     plugins: [tailwindcss()]
   },
-
-  integrations: [react()]
+  integrations: [react()],
+  devToolbar: { enabled: false },
 });

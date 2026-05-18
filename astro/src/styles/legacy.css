@@ -1235,16 +1235,39 @@ footer.split { padding: 0; background: var(--bg); color: var(--text); border-top
 }
 
 /* ════════════ HERO — фото-коллаж справа (4 портрета, EFA-style) ════════════ */
-.hero { padding: 0; min-height: clamp(580px, 78vh, 800px); display: flex; align-items: stretch; overflow: hidden; }
+.hero { padding: 0; min-height: clamp(520px, 70vh, 720px); display: flex; align-items: stretch; overflow: hidden; }
 .hero-content {
   width: 100%; max-width: none; margin: 0;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 0;
   align-items: stretch;
 }
 .hero-text-col {
   grid-column: 1 / 2;
-  padding: 80px 64px 64px;
-  display: flex; flex-direction: column; justify-content: center;
+  padding: 56px 64px 48px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: 24px;
+}
+.hero-text-col .hero-eyebrow { margin-bottom: 16px; }
+.hero-text-col .hero-title { flex: 0 1 auto; }
+/* Заполняем нижнюю часть hero — добавляем block с meta под кнопками */
+.hero-meta-row {
+  margin-top: auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+  padding-top: 16px; gap: 16px;
+}
+.hero-meta-row dt {
+  font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.16em;
+  color: var(--text-soft); text-transform: uppercase; font-weight: 600;
+  margin-bottom: 4px;
+}
+.hero-meta-row dd {
+  font-family: var(--font-sans); font-size: 14px; color: var(--brand-primary);
+  font-weight: 500; margin: 0; line-height: 1.35;
+}
+@media (max-width: 900px) {
+  .hero-text-col { padding: 40px 24px; }
+  .hero-meta-row { grid-template-columns: 1fr 1fr; padding-top: 12px; gap: 12px 16px; }
 }
 .hero-text-col .hero-eyebrow { grid-column: auto; }
 .hero-text-col .hero-title { grid-column: auto; font-size: clamp(56px, 7.4vw, 124px); margin-bottom: 32px; }
@@ -1315,6 +1338,15 @@ footer.split { padding: 0; background: var(--bg); color: var(--text); border-top
   color: var(--brand-primary); opacity: 0.7;
 }
 .feat-news.has-discover { padding-bottom: 200px; }
+/* Когда discover ставится после about (а не после feat-news) — врезается в about снизу */
+.discover.discover-after-about {
+  margin: -120px 0 0 64px;
+  background: var(--brand-gold);
+}
+.about.dark + .discover.discover-after-about { margin-top: -100px; }
+@media(max-width:900px){
+  .discover.discover-after-about { margin: -80px 24px 0; }
+}
 @media(max-width:900px){
   .discover { margin: -80px 24px 0; padding: 28px 24px 24px; }
   .discover h3 { font-size: 26px; }
@@ -1335,21 +1367,24 @@ footer.split { padding: 0; background: var(--bg); color: var(--text); border-top
 .news-broken-photo {
   position: relative; aspect-ratio: 4/3; overflow: visible;
 }
+/* Фото — в левый-нижний угол */
+.news-broken-photo img {
+  position: absolute; left: 0; bottom: 0;
+  width: calc(100% - 14px); height: calc(100% - 14px);
+  object-fit: cover; z-index: 2; display: block;
+}
+/* Рамка — в правый-верхний угол (видна справа и сверху) */
 .news-broken-photo::before {
-  content: ''; position: absolute; inset: 12px -12px -12px 12px;
+  content: ''; position: absolute; top: 0; right: 0;
+  width: calc(100% - 14px); height: calc(100% - 14px);
   border: 1px solid var(--brand-primary); pointer-events: none; z-index: 1;
 }
-.news-broken-photo img {
-  position: relative; z-index: 2;
-  width: 100%; height: 100%; object-fit: cover;
-  display: block;
-}
 .news-broken-photo .card-plus {
-  position: absolute; right: -12px; bottom: -12px; z-index: 3;
-  width: 38px; height: 38px;
+  position: absolute; right: 0; top: 0; z-index: 3;
+  width: 32px; height: 32px;
   background: var(--brand-primary); color: var(--bg);
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-family: var(--font-sans); border-radius: 0;
+  font-size: 20px; font-family: var(--font-sans); border-radius: 0;
 }
 .news-broken-tag {
   font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.06em;
