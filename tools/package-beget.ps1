@@ -7,8 +7,9 @@ $ZipPath = Join-Path $DistDir "beget-site.zip"
 
 Set-Location $Root
 
-Write-Host "Generating static site..."
-node tools\generate-site.mjs
+# Регенерация отключена — пакуем site/ как есть.
+# Чтобы вернуть генерацию: раскомментируйте строку ниже и обновите шаблоны в tools/generate-site.mjs.
+# node tools\generate-site.mjs
 
 if (!(Test-Path $SiteDir)) {
   throw "Site directory not found: $SiteDir"
