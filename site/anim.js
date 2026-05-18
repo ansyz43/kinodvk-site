@@ -8,29 +8,31 @@
   if (reduced) return;
 
   // ─── 1. Hero entry — заголовок, sub, кнопки, правая колонка ───
-  const heroTl = gsap.timeline({
-    defaults: { ease: 'expo.out' },
-    onComplete: () => {
-      gsap.set([
-        '.hero-eyebrow', '.hero-title > span', '.hero-sub',
-        '.hero-aside-tag',
-        '.hero-stats', '.hero-stats > .stat-item', '.hero-aside-meta',
-      ], { clearProps: 'all' });
-    },
-  });
-  heroTl
-    .from('.hero-eyebrow', { y: 20, autoAlpha: 0, duration: 0.6 })
-    .from('.hero-title > span', {
-      y: 80, autoAlpha: 0, filter: 'blur(20px)',
-      duration: 1.0, stagger: 0.08,
-    }, '-=0.35')
-    .from('.hero-sub', { y: 30, autoAlpha: 0, duration: 0.7 }, '-=0.55')
-    .from('.hero-aside-tag', { y: 20, autoAlpha: 0, duration: 0.5 }, '-=0.6')
-    .from('.hero-stats', { x: 60, autoAlpha: 0, duration: 0.8 }, '-=0.7')
-    .from('.hero-stats > .stat-item', {
-      y: 24, autoAlpha: 0, duration: 0.5, stagger: 0.07,
-    }, '-=0.5')
-    .from('.hero-aside-meta', { autoAlpha: 0, duration: 0.4 }, '-=0.2');
+  if (document.querySelector('.hero')) {
+    const heroTl = gsap.timeline({
+      defaults: { ease: 'expo.out' },
+      onComplete: () => {
+        gsap.set([
+          '.hero-eyebrow', '.hero-title > span', '.hero-sub',
+          '.hero-aside-tag',
+          '.hero-stats', '.hero-stats > .stat-item', '.hero-aside-meta',
+        ], { clearProps: 'all' });
+      },
+    });
+    heroTl
+      .from('.hero-eyebrow', { y: 20, autoAlpha: 0, duration: 0.6 })
+      .from('.hero-title > span', {
+        y: 80, autoAlpha: 0, filter: 'blur(20px)',
+        duration: 1.0, stagger: 0.08,
+      }, '-=0.35')
+      .from('.hero-sub', { y: 30, autoAlpha: 0, duration: 0.7 }, '-=0.55')
+      .from('.hero-aside-tag', { y: 20, autoAlpha: 0, duration: 0.5 }, '-=0.6')
+      .from('.hero-stats', { x: 60, autoAlpha: 0, duration: 0.8 }, '-=0.7')
+      .from('.hero-stats > .stat-item', {
+        y: 24, autoAlpha: 0, duration: 0.5, stagger: 0.07,
+      }, '-=0.5')
+      .from('.hero-aside-meta', { autoAlpha: 0, duration: 0.4 }, '-=0.2');
+  }
 
   // ─── 2. Counter-up через IntersectionObserver (надёжнее ScrollTrigger) ───
   const counters = document.querySelectorAll('[data-count]');
@@ -81,14 +83,13 @@
     if (body) tl.from(body, { y: 24, autoAlpha: 0, duration: 0.63 }, '-=0.42');
   });
 
-  // ─── 4. Stagger reveal для решёток (карточки номинаций, новости, программа, партнёры) ───
+  // ─── 4. Stagger reveal для решёток. Номинации и архив не двигаем:
+  // там важна строгая ровная сетка без визуальной "ступеньки".
   const grids = [
-    { sel: '.nom-grid', items: '.nom-card' },
     { sel: '.news-grid', items: '.news-card' },
     { sel: '.partner-logos', items: '.partner-item' },
     { sel: '.about-pillars', items: '.pillar' },
     { sel: '.prog-grid', items: '.prog-event' },
-    { sel: '#archive .archive-grid', items: '.film-card' },
   ];
   grids.forEach(({ sel, items }) => {
     document.querySelectorAll(sel).forEach((grid) => {
@@ -133,7 +134,7 @@
     });
   }
 
-  // ─── 6. 3D-tilt при hover на карточках номинаций и новостей ───
+  // ─── 6. 3D-tilt при hover на новостях. Номинации/архив оставляем неподвижными.
   function attachTilt(card, max = 6) {
     let bound = card.getBoundingClientRect();
     function onMove(e) {
@@ -156,6 +157,6 @@
     card.addEventListener('mouseleave', onLeave);
   }
   if (window.matchMedia('(hover: hover)').matches) {
-    document.querySelectorAll('.nom-card, .news-card, .film-card').forEach((c) => attachTilt(c, 5));
+    document.querySelectorAll('.news-card').forEach((c) => attachTilt(c, 5));
   }
 })();
