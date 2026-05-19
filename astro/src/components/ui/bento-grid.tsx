@@ -13,6 +13,7 @@ export interface BentoItem {
   cta?: string;
   colSpan?: number;
   hasPersistentHover?: boolean;
+  image?: string;     // фоновое фото — для архива
 }
 
 interface BentoGridProps {
@@ -51,7 +52,19 @@ function BentoGrid({ items = itemsSample }: BentoGridProps) {
                 item.hasPersistentHover,
             }
           )}
+          style={item.image ? { minHeight: 240 } : undefined}
         >
+          {/* Фото-фон для архивных карточек */}
+          {item.image && (
+            <>
+              <img
+                src={item.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+            </>
+          )}
           <div
             className={`absolute inset-0 ${
               item.hasPersistentHover
@@ -62,7 +75,10 @@ function BentoGrid({ items = itemsSample }: BentoGridProps) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:4px_4px]" />
           </div>
 
-          <div className="relative flex flex-col space-y-3">
+          <div className={cn(
+            "relative flex flex-col space-y-3",
+            item.image && "text-white h-full justify-end"
+          )}>
             <div className="flex items-center justify-between">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-black/5 dark:bg-white/10 group-hover:bg-gradient-to-br transition-all duration-300">
                 {item.icon}
@@ -81,7 +97,10 @@ function BentoGrid({ items = itemsSample }: BentoGridProps) {
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-medium text-gray-900 dark:text-gray-100 tracking-tight text-[15px]">
+              <h3 className={cn(
+                "font-medium tracking-tight text-[15px]",
+                item.image ? "text-white" : "text-gray-900 dark:text-gray-100"
+              )}>
                 {item.title}
                 {item.meta && (
                   <span className="ml-2 text-xs text-gray-500 dark:text-gray-400 font-normal">
@@ -89,7 +108,10 @@ function BentoGrid({ items = itemsSample }: BentoGridProps) {
                   </span>
                 )}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug font-[425]">
+              <p className={cn(
+                "text-sm leading-snug font-[425]",
+                item.image ? "text-white/85" : "text-gray-600 dark:text-gray-300"
+              )}>
                 {item.description}
               </p>
             </div>
