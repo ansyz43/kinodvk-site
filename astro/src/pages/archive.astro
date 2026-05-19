@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ArchiveBento from "../components/ui/archive-bento";
 
 type Film = { cat: string; title: string; meta: string; region?: string; winner?: boolean; big?: boolean; img?: string };
 
@@ -80,20 +81,7 @@ const years: Year[] = [
           <div class="archive-year-date">{y.date}</div>
         </header>
 
-        <div class="bento reveal-stagger">
-          {y.films.map((f) => (
-            <article class={"bento-card" + (f.big ? " big" : "") + (f.winner ? " winner" : "")}>
-              {f.img && <img class="bento-photo" src={f.img} alt={f.title} loading="lazy" />}
-              <div class="bento-overlay">
-                <div class="bento-cat">{f.cat}</div>
-                <h3 class="bento-title" set:html={f.title}></h3>
-                <div class="bento-meta" set:html={f.meta}></div>
-                {f.region && <div class="bento-region">{f.region}</div>}
-                {f.winner && <div class="bento-winner-tag">Winner</div>}
-              </div>
-            </article>
-          ))}
-        </div>
+        <ArchiveBento year={y.num as "2024" | "2025" | "2026"} client:visible />
       </section>
     ))}
   </div>

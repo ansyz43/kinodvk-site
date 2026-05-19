@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import MasterclassesAccordion from "../components/ui/masterclasses-accordion";
 
 const schedule = [
   {
@@ -81,7 +82,8 @@ const masterclasses = [
     <p>Открытые встречи с&nbsp;профессионалами индустрии. Регистрация откроется в&nbsp;июле 2026 года.</p>
   </header>
 
-  <div class="accordion">
+  <MasterclassesAccordion client:visible />
+  <div style="display:none">
     {masterclasses.map((m) => (
       <article class="acc-item" data-acc>
         <button type="button" class="acc-header" data-acc-toggle aria-expanded="false">
