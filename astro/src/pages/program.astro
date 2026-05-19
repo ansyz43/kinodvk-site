@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import MasterclassesAccordion from "../components/ui/masterclasses-accordion";
+import ProgramTimeline from "../components/ui/program-timeline";
 
 const schedule = [
   {
@@ -46,30 +47,23 @@ const masterclasses = [
   <p class="page-hero-lead">Три дня деловой и&nbsp;образовательной программы перед III церемонией Дальневосточной Кинопремии. Площадка — Городской дворец культуры.</p>
 </section>
 
-<!-- Animated vertical schedule -->
-<section class="schedule reveal">
+<!-- Vertical timeline — компонент из 21st-dev (Modern Timeline, framer-motion) -->
+<section class="schedule reveal" style="padding:64px 24px;max-width:1280px;margin:0 auto;">
   <header class="schedule-head">
     <h2>Расписание</h2>
     <p>Точное время и&nbsp;спикеры будут опубликованы ближе к&nbsp;сентябрю</p>
   </header>
+  <ProgramTimeline client:visible />
+</section>
 
+<!-- Старая самописная сетка скрыта -->
+<section style="display:none">
   {schedule.map((day) => (
     <div class="schedule-day">
       <div class="schedule-day-mark">
         <div class="schedule-day-date">{day.date}</div>
         <div class="schedule-day-weekday">{day.weekday}</div>
       </div>
-      <ol class="schedule-events">
-        {day.events.map((ev) => (
-          <li class="schedule-event">
-            <time class="schedule-time">{ev.time}</time>
-            <div class="schedule-body">
-              <h3 set:html={ev.title}></h3>
-              <p set:html={ev.detail}></p>
-            </div>
-          </li>
-        ))}
-      </ol>
     </div>
   ))}
 </section>
