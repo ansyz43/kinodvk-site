@@ -1,0 +1,70 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title={`Новости · Дальневосточная Кинопремия 2026`} active={"news"}>
+
+<section class="page-hero">
+  
+  <div class="section-headline">
+    <div class="section-eyebrow">Новости</div>
+    <h2 class="section-title">Новости<br>и <span class="hl">анонсы</span></h2>
+    <p class="section-body">Лента публикаций о старте приёма заявок, экспертном совете, деловой программе и итогах церемонии.</p>
+  </div>
+</section>
+
+<section class="feat-news" aria-label="Главная новость">
+  <div class="feat-news-inner">
+    <div class="feat-news-body">
+      <div class="feat-news-tag">News · 18 мая 2026</div>
+      <h2 class="feat-news-title">III Дальневосточная Кинопремия пройдёт <em>в&nbsp;Хабаровске</em></h2>
+      <p class="feat-news-lead">Главная сцена премии 2026 года переезжает в&nbsp;столицу ДФО — церемония вручения состоится <b>25 сентября в&nbsp;Городском дворце культуры</b>. До&nbsp;неё в&nbsp;Хабаровске пройдёт расширенная программа: мастер-классы российских кинематографистов, деловой блок для продюсеров и&nbsp;дистрибьюторов, локейшен-тур по&nbsp;городу и&nbsp;его окрестностям. В&nbsp;сезоне-2026 сохраняются все шесть прошлогодних номинаций — и&nbsp;добавляется седьмая, <b>«Арктика»</b>, для работ, снятых на&nbsp;Крайнем Севере и&nbsp;в&nbsp;Заполярье. Старт приёма заявок — апрель 2026.</p>
+      <a class="feat-news-cta" href="/program">Деловая программа →</a>
+    </div>
+    <dl class="feat-news-meta">
+      <dt>Дата церемонии</dt>
+      <dd>25 сентября 2026</dd>
+      <dt>Площадка</dt>
+      <dd>Городской дворец культуры, Хабаровск</dd>
+      <dt>Программа</dt>
+      <dd>Мастер-классы, деловой блок, локейшен-тур, церемония вручения</dd>
+      <dt>Новая номинация</dt>
+      <dd>«Арктика» — для фильмов о&nbsp;Крайнем Севере и&nbsp;Заполярье</dd>
+    </dl>
+  </div>
+</section>
+
+<section class="press-strip theme-light" id="news-preview">
+  <div class="strip-head">
+    <h2>Другие новости</h2>
+    <a href="/contacts">Связаться с пресс-службой</a>
+  </div>
+  <div class="press-rail" data-rail>
+    <article class="press-card">
+      <div class="news-date">Апрель 2026</div>
+      <h3>Приём заявок на премию 2026 готовится к старту</h3>
+      <p>Подробная информация о способах подачи будет опубликована после утверждения оргкомитетом технических деталей.</p>
+      <a class="card-plus" href="/submit" aria-label="Открыть новость">+</a>
+    </article>
+
+    <article class="press-card">
+      <div class="news-date">Май 2026</div>
+      <h3>Седьмая номинация — «Арктика»</h3>
+      <p>В сезоне-2026 к шести основным категориям добавлена седьмая — для фильмов, снятых в Заполярье и на Крайнем Севере.</p>
+      <a class="card-plus" href="/nominations" aria-label="Открыть новость">+</a>
+    </article>
+
+    <article class="press-card">
+      <div class="news-date">2026</div>
+      <h3>Экспертный совет формируется</h3>
+      <p>Состав Экспертного совета будет опубликован после утверждения оргкомитетом.</p>
+      <a class="card-plus" href="/expert-council" aria-label="Открыть новость">+</a>
+    </article>
+  </div>
+  <div class="rail-controls">
+    <button type="button" data-rail-prev aria-label="Назад">←</button>
+    <span></span>
+    <button type="button" data-rail-next aria-label="Вперёд">→</button>
+  </div>
+</section>
+
+</Layout>

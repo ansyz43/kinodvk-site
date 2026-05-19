@@ -14,7 +14,7 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
       </h1>
       <p class="hero-sub">Профессиональная награда для тех, кто снимает кино на&nbsp;Дальнем Востоке и&nbsp;о&nbsp;Дальнем Востоке.</p>
       <div class="hero-actions">
-        <a href="/submit" class="btn-primary">Подать заявку →</a>
+        <a href="/submit" class="shiny-cta"><span>Подать заявку →</span></a>
         <a href="/archive" class="btn-ghost">Архив победителей</a>
       </div>
       <dl class="hero-meta-row">
@@ -23,11 +23,12 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
         <div><dt>Дедлайн</dt><dd>Подача — апрель</dd></div>
       </dl>
     </div>
-    <div class="hero-collage" aria-hidden="true">
-      <div class="ph" style="background-image:url('/assets/gallery/2025/LX3A5728_resized.jpg')"><div class="ph-cap">II сезон · Улан-Удэ · 2025</div></div>
-      <div class="ph" style="background-image:url('/assets/gallery/2024/3K6A2040_resized.jpg')"><div class="ph-cap">I сезон · 2024</div></div>
-      <div class="ph" style="background-image:url('/assets/gallery/2025/LX3A6180_resized.jpg')"><div class="ph-cap">Деловая программа</div></div>
-      <div class="ph" style="background-image:url('/assets/gallery/2024/3K6A2829_resized.jpg')"><div class="ph-cap">Церемония вручения</div></div>
+    <div class="hero-hero-img" aria-hidden="true">
+      <img src="/assets/hero/khabarovsk.jpg" alt="Площадь Славы, Хабаровск" />
+      <div class="hero-img-cap">
+        <span class="hero-img-tag">Площадка</span>
+        <span class="hero-img-place">Хабаровск · Площадь Славы</span>
+      </div>
     </div>
   </div>
 </section>
@@ -38,9 +39,9 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
   <div class="stats-strip-inner">
     <div class="stats-tag">Приём заявок · 2026</div>
     <div class="hero-stats">
-      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">сезон премии</div></div>
-      <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">номинаций — включая «Арктику»</div></div>
-      <div class="stat-item"><div class="stat-num">2026</div><div class="stat-label">Хабаровск · церемония</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="3">0</div><div class="stat-label">сезон премии</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="7">0</div><div class="stat-label">номинаций — включая «Арктику»</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="2026">0</div><div class="stat-label">Хабаровск · церемония</div></div>
     </div>
   </div>
   <div class="hero-aside-meta">
@@ -81,7 +82,7 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
   </div>
 </section>
 
-<section class="about dark reveal" id="about">
+<section class="about light-about reveal" id="about">
   <div class="about-grid">
     <div class="about-visual">
       <div class="av-inner">
@@ -115,61 +116,67 @@ import PhotoMarquee from "../components/PhotoMarquee.tsx";
 
 <PhotoMarquee client:visible />
 
-<section class="news-strip-light reveal" id="news-preview">
-  <div class="strip-head">
-    <h2>Новости и пресса</h2>
-    <a href="/news">Все новости</a>
-    <span class="line"></span>
+<section class="nominations nominations-v2 reveal" id="nominations">
+  <div class="nominations-head">
+    <div class="nominations-head-left">
+      <div class="nominations-eyebrow">
+        <span class="dot"></span>
+        <span>Номинации 2026</span>
+      </div>
+      <h2 class="nominations-title">Шесть <em>категорий</em><br />одной премии</h2>
+    </div>
+    <p class="nominations-lead">На соискание принимаются игровые, неигровые и&nbsp;анимационные фильмы, сериалы и&nbsp;короткометражные работы, связанные с&nbsp;Дальневосточным федеральным округом.</p>
   </div>
-  <div class="news-broken-grid">
-    <a class="news-broken-card" href="/news">
-      <div class="news-broken-photo">
-        <img src="/assets/gallery/2025/LX3A5746_resized.jpg" alt="" />
-        <span class="card-plus" aria-hidden="true">+</span>
-      </div>
-      <div class="news-broken-tag">Press release</div>
-      <h3>Приём заявок на премию 2026 готовится к старту</h3>
-    </a>
-    <a class="news-broken-card" href="/news">
-      <div class="news-broken-photo">
-        <img src="/assets/gallery/2024/3K6A3214_resized.jpg" alt="" />
-        <span class="card-plus" aria-hidden="true">+</span>
-      </div>
-      <div class="news-broken-tag">News</div>
-      <h3>Седьмая номинация — «Арктика»</h3>
-    </a>
-    <a class="news-broken-card" href="/expert-council">
-      <div class="news-broken-photo">
-        <img src="/assets/gallery/2024/3K6A1474_resized.jpg" alt="" />
-        <span class="card-plus" aria-hidden="true">+</span>
-      </div>
-      <div class="news-broken-tag">Press release</div>
-      <h3>Экспертный совет формируется</h3>
-    </a>
-    <a class="news-broken-card" href="/program">
-      <div class="news-broken-photo">
-        <img src="/assets/gallery/2025/LX3A6615_resized.jpg" alt="" />
-        <span class="card-plus" aria-hidden="true">+</span>
-      </div>
-      <div class="news-broken-tag">Programme</div>
-      <h3>Деловая программа и мастер-классы 2026</h3>
-    </a>
-  </div>
-</section>
 
-<section class="nominations reveal" id="nominations">
-  <div class="section-headline">
-    <div class="section-eyebrow">Номинации 2026</div>
-    <h2 class="section-title">Шесть <span class="hl">категорий</span></h2>
-    <p class="section-body">На соискание принимаются игровые, неигровые и анимационные фильмы, сериалы и короткометражные работы, связанные с Дальневосточным федеральным округом.</p>
-  </div>
-  <div class="nom-grid nom-grid-six">
-    <div class="nom-card"><div class="nom-icon">I</div><div class="nom-title">Лучший полнометражный игровой, неигровой, анимационный фильм или сериал</div><p class="nom-desc">Вручается продюсеру картины. Хронометраж: от 60 минут для игровых, от 52 минут для неигровых.</p></div>
-    <div class="nom-card"><div class="nom-icon">II</div><div class="nom-title">Лучшая режиссёрская работа</div><p class="nom-desc">Награда режиссёру за выдающуюся постановочную работу.</p></div>
-    <div class="nom-card"><div class="nom-icon">III</div><div class="nom-title">Лучший сценарий</div><p class="nom-desc">Приз сценаристу или сценарной группе.</p></div>
-    <div class="nom-card"><div class="nom-icon">IV</div><div class="nom-title">Лучший дебют</div><p class="nom-desc">Присуждается кинематографисту-дебютанту.</p></div>
-    <div class="nom-card"><div class="nom-icon">V</div><div class="nom-title">Лучший короткометражный фильм</div><p class="nom-desc">Вручается продюсеру короткометражной картины.</p></div>
-    <div class="nom-card"><div class="nom-icon">VI</div><div class="nom-title">За вклад в развитие киноиндустрии Дальнего Востока</div><p class="nom-desc">Специальный приз оргкомитета.</p></div>
+  <div class="nom-list reveal-stagger">
+    <article class="nom-row">
+      <div class="nom-num">I</div>
+      <div class="nom-body">
+        <h3>Лучший полнометражный фильм или сериал</h3>
+        <p>Игровые, неигровые, анимационные. Вручается продюсеру картины. Хронометраж: от&nbsp;60&nbsp;минут для&nbsp;игровых, от&nbsp;52&nbsp;для&nbsp;неигровых.</p>
+      </div>
+      <div class="nom-meta">Полный метр</div>
+    </article>
+    <article class="nom-row">
+      <div class="nom-num">II</div>
+      <div class="nom-body">
+        <h3>Лучшая режиссёрская работа</h3>
+        <p>Награда режиссёру за&nbsp;выдающуюся постановочную работу в&nbsp;полнометражном игровом, неигровом, анимационном фильме или&nbsp;сериале.</p>
+      </div>
+      <div class="nom-meta">Режиссура</div>
+    </article>
+    <article class="nom-row">
+      <div class="nom-num">III</div>
+      <div class="nom-body">
+        <h3>Лучший сценарий</h3>
+        <p>Приз сценаристу или&nbsp;сценарной группе полнометражного игрового, неигрового, анимационного фильма или&nbsp;сериала.</p>
+      </div>
+      <div class="nom-meta">Сценарий</div>
+    </article>
+    <article class="nom-row">
+      <div class="nom-num">IV</div>
+      <div class="nom-body">
+        <h3>Лучший дебют</h3>
+        <p>Присуждается кинематографисту-дебютанту, чья первая работа в&nbsp;полном метре или&nbsp;сериале признана наиболее успешной.</p>
+      </div>
+      <div class="nom-meta">Дебют</div>
+    </article>
+    <article class="nom-row">
+      <div class="nom-num">V</div>
+      <div class="nom-body">
+        <h3>Лучший короткометражный фильм</h3>
+        <p>Игровые, неигровые, анимационные. До&nbsp;60&nbsp;минут для&nbsp;игровых, до&nbsp;52&nbsp;для&nbsp;неигровых. Вручается продюсеру короткометражной картины.</p>
+      </div>
+      <div class="nom-meta">Короткий метр</div>
+    </article>
+    <article class="nom-row">
+      <div class="nom-num">VI</div>
+      <div class="nom-body">
+        <h3>За&nbsp;вклад в&nbsp;развитие киноиндустрии Дальнего Востока</h3>
+        <p>Специальный приз оргкомитета для&nbsp;профессионалов и&nbsp;организаций, внёсших значимый вклад в&nbsp;развитие кино региона.</p>
+      </div>
+      <div class="nom-meta">Спец. приз</div>
+    </article>
   </div>
 </section>
 

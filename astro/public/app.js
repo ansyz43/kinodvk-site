@@ -1,9 +1,79 @@
 // Общая логика сайта: мобильное меню, модалка контакта, отправка /api/lead, простые горизонтальные ленты.
 
-// Reveal-on-scroll — IntersectionObserver добавляет .in при попадании в viewport
+// Sound toggle — переключает иконку, при наличии audio[data-ambient] управляет воспроизведением
 (function () {
+  const btn = document.querySelector('[data-sound-toggle]');
+  if (!btn) return;
+  const audio = document.querySelector('audio[data-ambient]');
+  const iconOff = btn.querySelector('[data-icon="off"]');
+  const iconOn  = btn.querySelector('[data-icon="on"]');
+  let on = false;
+  btn.addEventListener('click', () => {
+    on = !on;
+    btn.dataset.on = String(on);
+    iconOff.style.display = on ? 'none' : '';
+    iconOn.style.display  = on ? '' : 'none';
+    if (audio) {
+      if (on) audio.play().catch(() => {});
+      else audio.pause();
+    }
+  });
+})();
+
+// Text Reveal by word — большие заголовки .hero-title и [data-text-reveal] появляются пословно
+(function () {
+  const targets = document.querySelectorAll('.hero-title, [data-text-reveal]');
+  targets.forEach((el) => {
+    if (el.dataset.split === '1') return;
+    el.dataset.split = '1';
+    const html = el.innerHTML;
+    // Разбиваем по словам, сохраняя <br>, <span>, <em> структуру.
+    const wrap = (txt) => txt.replace(/(\S+)/g, '<span class="word"><span class="word-i">$1</span></span>');
+    el.innerHTML = html.split('<br>').map(wrap).join('<br>');
+    // Запускаем анимацию: либо сразу (hero), либо на scroll-into-view
+    const isHero = el.classList.contains('hero-title');
+    const fire = () => {
+      el.querySelectorAll('.word').forEach((w, i) => {
+        w.style.transitionDelay = (i * 70) + 'ms';
+        requestAnimationFrame(() => w.classList.add('in'));
+      });
+    };
+    if (isHero) {
+      setTimeout(fire, 150);
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { fire(); io.unobserve(e.target); } });
+      }, { threshold: 0.4 });
+      io.observe(el);
+    }
+  });
+})();
+
+// Cursor trail — за курсором тянется лёгкий шлейф золотых точек
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return; // не на touch-устройствах
+  let last = 0;
+  const RATE = 28; // ms между точками
+  document.addEventListener('mousemove', (e) => {
+    const now = performance.now();
+    if (now - last < RATE) return;
+    last = now;
+    const d = document.createElement('div');
+    d.className = 'cursor-dust';
+    d.style.left = e.clientX + 'px';
+    d.style.top  = e.clientY + 'px';
+    document.body.appendChild(d);
+    requestAnimationFrame(() => d.classList.add('fade'));
+    setTimeout(() => d.remove(), 700);
+  }, { passive: true });
+})();
+
+// Reveal-on-scroll — IntersectionObserver: blur-up + stagger
+(function () {
+  const targets = document.querySelectorAll('.reveal, .reveal-stagger');
   if (!('IntersectionObserver' in window)) {
-    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
+    targets.forEach((el) => el.classList.add('in'));
     return;
   }
   const io = new IntersectionObserver((entries) => {
@@ -14,7 +84,55 @@
       }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  targets.forEach((el) => io.observe(el));
+})();
+
+// Mouse-follow для .nom-card (radial-glow следует за курсором)
+(function () {
+  document.querySelectorAll('.nom-card').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+})();
+
+// Animated counter — цифры в .stat-num [data-count] плавно отсчитываются вверх
+// до значения в data-count, когда .stats-strip попадает в viewport
+(function () {
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+  function animate(el, target, duration) {
+    const start = performance.now();
+    const from = 0;
+    function step(now) {
+      const p = Math.min(1, (now - start) / duration);
+      const v = Math.round(from + (target - from) * easeOut(p));
+      el.textContent = v;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target; // финальное точное значение
+    }
+    requestAnimationFrame(step);
+  }
+  const nums = document.querySelectorAll('.stat-num[data-count]');
+  if (!nums.length) return;
+  const seen = new WeakSet();
+  if (!('IntersectionObserver' in window)) {
+    nums.forEach((el) => animate(el, +el.dataset.count, 1500));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && !seen.has(entry.target)) {
+        seen.add(entry.target);
+        const target = parseInt(entry.target.dataset.count, 10);
+        const duration = target > 100 ? 2200 : 1500;
+        animate(entry.target, target, duration);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  nums.forEach((el) => io.observe(el));
 })();
 
 (function () {
